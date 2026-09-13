@@ -85,6 +85,8 @@ replication.
 | `Untitled1_LAB.ps1` | 13,935 | `2A4D6D9171661C26C217160C6E0AA057898C3CB1B62EB4D97E525A0D378C694C` |
 | `Untitled1_LAB_ppitt.ps1` | 13,935 | `2A4D6D9171661C26C217160C6E0AA057898C3CB1B62EB4D97E525A0D378C694C` |
 
+*Note: `Untitled1_LAB_ppitt.ps1` is not a second artifact — it is `Untitled1_LAB.ps1` copied under the `ppitt` account as the per-user filename fix described above; the identical SHA256 confirms it.*
+
 All three were hashed and then quarantined to `C:\Quarantine_Case79` during the incident
 response. No attacker persistence was found — non-Microsoft scheduled tasks on the host are
 Edge Update and OneDrive Reporting only, which matches the threat model: this chain is
