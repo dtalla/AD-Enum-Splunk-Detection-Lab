@@ -73,7 +73,6 @@ threat-intel/
   analysis.md                  the Huntress incident, ATT&CK mapping, artifact table
 attacks/
   detonation-log.md            both detonation runs, what fired, the ACL problem
-  atomics.md                   validation commands - split into its own project
 detections/
   methodology.md               how the rules were designed and why
   macros.md                    the four macros, commented - read this one first
