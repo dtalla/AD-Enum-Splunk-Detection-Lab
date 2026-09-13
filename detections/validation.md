@@ -1,7 +1,31 @@
-## Detection Validation (T1087.002)
+# Detection Validation — moved
 
-Proof that the enumeration detection keys on behavior, not on Untitled1.ps1's specific filenames or tooling: the same T1087.002 account-discovery technique run through three different tools (Get-ADUser, net user /domain, and ADSISearcher), verifying the same behavioral rule fires on all three.
+Multi-tool validation of T1087.002 — running the same enumeration through **RSAT**,
+**`net.exe`**, and **`ADSISearcher`** to prove the Discovery rule keys on behaviour rather
+than on tooling — is being carried out as its own project rather than folded in here.
 
-If it does, the detection is durable against a different vibe-coded script next time, not just this one.
+**Why it was split.** Validation is a different argument from detection. This repo answers
+*"can this kill chain be detected and responded to?"* Validation answers *"does the rule
+survive a change of tool?"* — which deserves its own detonations, its own controls, and its
+own writeup rather than an appendix.
 
-Not yet populated, pending detonation and the atomics runs in attacks/atomics.md. See the Status checklist in the repo README for current progress.
+**What the rule is designed to survive.** The Discovery rule keys on **4662 directory-object
+reads at the domain controller**, not on PowerShell cmdlet names. Any tool that enumerates
+the directory produces those reads:
+
+| Tool | Requires RSAT | Produces 4662 at the DC |
+|---|---|---|
+| `Get-ADUser` / `Get-ADComputer` / `Get-ADTrust` | yes | yes |
+| `net user /domain`, `net group /domain` | no | yes |
+| `[adsisearcher]` | no | yes |
+| BloodHound / SharpHound | no | yes |
+
+The threshold is `dc(Object_Type) >= 3` — three or more distinct object classes read by the
+same account. None of the four tools above can avoid that if they are doing reconnaissance.
+
+**What would falsify the design.** A tool that enumerates AD without generating 4662 events —
+for example by reading a replicated copy of the directory, or by using an API path not covered
+by Directory Service Access auditing. That is the case the separate project is meant to test,
+and it is the honest limit of this detection.
+
+See `methodology.md` for the reasoning, and `risk-rules/README.md` for the rule itself.
