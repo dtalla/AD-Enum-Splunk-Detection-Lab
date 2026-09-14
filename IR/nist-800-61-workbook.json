@@ -1,0 +1,77 @@
+{
+"name": "AD Enumeration Kill Chain (NIST 800-61)",
+"description": "Incident response workbook for credential backed Active Directory enumeration leading to local staging, archiving and exfiltration. Phases follow NIST SP 800-61r2. Every task requires a closing note, so the completed workbook is an evidence record rather than a checklist.",
+"is_default": false,
+"is_note_required": true,
+"source": "Splunk SOAR workbook template, exported from the famtech-ad-enum lab. Import via Administration > Response Management > Workbooks.",
+"phases": [
+{
+"name": "Detection",
+"order": 1,
+"tasks": [
+{ "name": "Determine if an incident has occurred", "order": 1, "is_note_required": true,
+"description": "Confirm the correlation search result reflects real activity, not a detection artifact. Check that each contributing risk rule fired on distinct evidence and that the artifact count matches the result rows." },
+{ "name": "Analyze precursors and indicators", "order": 2, "is_note_required": true,
+"description": "Enumerate the contributing risk events: which rules, which MITRE techniques, which accounts and hosts, and the true first_seen / last_seen of the activity." },
+{ "name": "Look for correlating information", "order": 3, "is_note_required": true,
+"description": "Pull supporting telemetry not used by the rules themselves: process ancestry, 4104 script blocks, logon history for the accounts involved." },
+{ "name": "Perform research", "order": 4, "is_note_required": true,
+"description": "Map observed behaviour to known tradecraft and public reporting. Record the reference used and what specifically matched." },
+{ "name": "Confirmed incident", "order": 5, "is_note_required": true,
+"description": "State the confirmation decision and the single strongest piece of evidence behind it." }
+]
+},
+{
+"name": "Analysis and Containment",
+"order": 2,
+"tasks": [
+{ "name": "Determine functional impact", "order": 1, "is_note_required": true,
+"description": "NIST 800-61r2 functional impact: None / Low / Medium / High. State which systems and services are degraded and for whom." },
+{ "name": "Determine information impact", "order": 2, "is_note_required": true,
+"description": "NIST 800-61r2 information impact: None / Privacy Breach / Proprietary Breach / Integrity Loss. If data left the environment, assume exfiltration unless it can be disproved." },
+{ "name": "Determine recoverability effort", "order": 3, "is_note_required": true,
+"description": "NIST 800-61r2 recoverability: Regular / Supplemented / Extended / Not Recoverable. Judge against the resources actually available to the responder, not theoretically available." },
+{ "name": "Prioritize incident", "order": 4, "is_note_required": true,
+"description": "Combine the three impact ratings into an overall priority and state the reasoning, not just the label." },
+{ "name": "Report incident", "order": 5, "is_note_required": true,
+"description": "Record who was notified, when, through which channel, and what they were told." },
+{ "name": "Contain incident", "order": 6, "is_note_required": true,
+"description": "Execute containment. Record the pre containment state, the action taken, and an INDEPENDENT verification of the post containment state. A playbook status of success is not verification." }
+]
+},
+{
+"name": "Eradicate",
+"order": 3,
+"tasks": [
+{ "name": "Identify and mitigate all vulnerabilities", "order": 1, "is_note_required": true,
+"description": "Root cause each stage of the chain: what condition allowed it, what mitigates it, and whether it is fixable or only detectable." },
+{ "name": "Removal of malicious content", "order": 2, "is_note_required": true,
+"description": "Hash artifacts BEFORE removal. Prefer quarantine over deletion so evidence survives. Verify removal with a second, independent query. Check for persistence." },
+{ "name": "Verify no other hosts are affected", "order": 3, "is_note_required": true,
+"description": "Run an enterprise wide sweep and attach the result as evidence. State the limits of the sweep: indicator based searches do not catch renamed tooling." }
+]
+},
+{
+"name": "Recovery",
+"order": 4,
+"tasks": [
+{ "name": "Restore affected systems", "order": 1, "is_note_required": true,
+"description": "Block the identified malicious destination BEFORE lifting host containment. Restore the recorded pre incident state, not a plausible default." },
+{ "name": "Validate restoration", "order": 2, "is_note_required": true,
+"description": "Evidence every restoration criterion with an attached action or query result. Include a detection regression test: confirm the rules still fire after the response changed the environment." },
+{ "name": "Implement additional monitoring", "order": 3, "is_note_required": true,
+"description": "Record detection changes made during the incident and new detections the incident justified, including monitoring for the response tooling's own failure modes." }
+]
+},
+{
+"name": "Post Incident Activity",
+"order": 5,
+"tasks": [
+{ "name": "Create a follow up report", "order": 1, "is_note_required": true,
+"description": "Executive summary, timeline, NIST prioritisation, attack chain by tactic, scope, current status with open items, and an honest what worked / what did not." },
+{ "name": "Lessons learned", "order": 2, "is_note_required": true,
+"description": "One finding per lesson, each with the observation, the root cause, and the specific change adopted. Include the things that reported success while doing nothing." }
+]
+}
+]
+}
