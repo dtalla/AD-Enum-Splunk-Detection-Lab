@@ -1,6 +1,6 @@
 # Dashboards
 
-Two Classic (Simple XML) dashboards, both live and built on the Splunk instance (`10.0.0.225:8000`, Search & Reporting app, owner `dorian`). Companion detection logic lives under [`detections/`](../detections).
+Two Classic (Simple XML) dashboards, both live and built on the Splunk Search & Reporting app, owner `dorian`. Companion detection logic lives under [`detections/`](../detections).
 
 ## Why two dashboards instead of one
 
@@ -19,7 +19,7 @@ Analyst deep-dive, scoped to one account/host via `user`/`dest` tokens (default 
 
 ## SOC Overview - Data Model (tstats)
 
-Operational, always-on, environment-wide. Every panel queries a CIM data model (`Authentication`, `Endpoint.Filesystem`, plus a plain `index=risk` search standing in for `Risk.All_Risk` since this is Enterprise, not ES). Full panel-by-panel writeup, including the Sep 13, 2026 investigation into two panels that were silently returning no data (stale data model acceleration, a detection blind spot from how the attack script is invoked, and a Splunk dashboard token-parsing gotcha): [`dashboard-datamodel-tstats.md`](./dashboard-datamodel-tstats.md).
+Operational, always-on, environment-wide. Every panel queries a CIM data model (`Authentication`, `Endpoint.Filesystem`, plus a plain `index=risk` search standing in for `Risk.All_Risk` since this is Enterprise, not ES). Full panel-by-panel writeup: [`dashboard-datamodel-tstats.md`](./dashboard-datamodel-tstats.md).
 
 ## Status
 
