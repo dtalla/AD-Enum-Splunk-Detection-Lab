@@ -1,5 +1,26 @@
-# Investigation Dashboard
+# Dashboards
 
-A single Splunk Studio dashboard, ad-enum-investigation.xml, with four panels: a risk timeline for the affected object, the process tree (parent/child from Sysmon Event ID 1), a count of AD objects touched, and outbound connections from the compromised endpoint.
+Two Classic (Simple XML) dashboards, both live and built on the Splunk instance (`10.0.0.225:8000`, Search & Reporting app, owner `dorian`). Companion detection logic lives under [`detections/`](../detections).
 
-Not yet populated, pending detonation and the risk rules it visualizes. See the Status checklist in the repo README for current progress.
+## Why two dashboards instead of one
+
+Scheduled backend content (the risk rules and correlation search under `detections/`) should almost always run via `tstats` over accelerated data models for performance at scale. These two dashboards illustrate that split side by side: one for deep investigative work on a specific incident, one as the always-on operational view.
+
+| | Raw SPL dashboard | Data model dashboard |
+|---|---|---|
+| Source | `search index=...` directly | `tstats` / `datamodel` over CIM models |
+| Scope | One incident / account / host | Whole environment |
+| Field names | Per-sourcetype (`User` vs `user` vs `Account_Name`) | Uniform CIM names (`user`, `dest`, `process`) |
+| Use case | Analyst pivot during an investigation | SOC monitor, standing overview |
+
+## AD Enum Incident - Raw SPL Investigation
+
+Analyst deep-dive, scoped to one account/host via `user`/`dest` tokens (default `Prush`, `*`). Every panel searches `index=us_domain` or `index=end-user` directly - no data model, no acceleration. Full panel-by-panel writeup: [`dashboard-raw-spl.md`](./dashboard-raw-spl.md).
+
+## SOC Overview - Data Model (tstats)
+
+Operational, always-on, environment-wide. Every panel queries a CIM data model (`Authentication`, `Endpoint.Filesystem`, plus a plain `index=risk` search standing in for `Risk.All_Risk` since this is Enterprise, not ES). Full panel-by-panel writeup, including the Sep 13, 2026 investigation into two panels that were silently returning no data (stale data model acceleration, a detection blind spot from how the attack script is invoked, and a Splunk dashboard token-parsing gotcha): [`dashboard-datamodel-tstats.md`](./dashboard-datamodel-tstats.md).
+
+## Status
+
+Both dashboards are built, deployed, and confirmed populating with real data as of Sep 13, 2026. Source XML for both is exported alongside these docs.
