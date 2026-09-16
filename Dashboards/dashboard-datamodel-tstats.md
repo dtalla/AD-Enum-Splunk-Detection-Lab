@@ -14,7 +14,7 @@ Investigation** dashboard when you already know which account and host to dig in
 Live at `10.0.0.225:8000`, Search & Reporting app, Classic (Simple XML) dashboard, private
 sharing.
 
-`(add screenshot of the full dashboard here)`
+
 
 ## Panel 1: Remote RDP Logons
 
@@ -23,12 +23,14 @@ sharing.
 interactive logon is the starting point of the attack chain this whole project is built
 around.
 
+
 ```spl
 | tstats summariesonly=true count from datamodel=Authentication
 where Authentication.action=success Authentication.app=win:remote
 by Authentication.user, Authentication.dest
 | rename Authentication.user as user, Authentication.dest as dest
 ```
+<img width="1864" height="289" alt="Image" src="https://github.com/user-attachments/assets/48f42ca3-6894-42c2-9be8-3c6c1453a5ad" />
 
 ## Panel 2: Top Processes by Distinct AD Object Classes Queried
 
@@ -46,7 +48,7 @@ by Change.user, _time span=1h
 | where distinct_object_classes >= 3
 ```
 
-`(add screenshot of this panel showing distinct_object_classes = 5 for both accounts here)`
+<img width="1848" height="671" alt="Image" src="https://github.com/user-attachments/assets/5b6b5eb9-a996-445a-a0a0-f0f99bf6be54" />
 
 ## Panel 3: File Staging Activity by Host
 
@@ -61,6 +63,7 @@ by Filesystem.dest, _time span=15m
 | rename Filesystem.dest as dest
 | where distinct_csv_files >= 4
 ```
+<img width="1852" height="272" alt="Image" src="https://github.com/user-attachments/assets/00d08b2a-de11-4ade-a363-de8235026294" />
 
 ## Panel 4: Live Risk Board, Open Risk Objects
 
@@ -76,8 +79,7 @@ values(mitre_tactic) as tactics by risk_object
 | where total_risk >= 60 AND tactic_count >= 4
 | sort - total_risk
 ```
-
-`(add screenshot of the Live Risk Board panel here)`
+<img width="1858" height="648" alt="Image" src="https://github.com/user-attachments/assets/0f0763b5-7b71-47a1-95ab-3ce51ede8d77" />
 
 ## Investigation and fixes (Sep 13, 2026)
 
@@ -127,7 +129,7 @@ detection rules themselves.
 `dashboard-raw-spl.md` that its own Panel 3 still carries the old `ProgramData` only filter and
 has not yet been fixed the same way.
 
-### 4. Splunk token parsing `$` gotcha
+### 4. Splunk token parsing `$` 
 
 **Observed.** A draft panel filter written as `Filesystem.file_name="*.csv$"`, intended as an
 end of string anchor, matched nothing.
