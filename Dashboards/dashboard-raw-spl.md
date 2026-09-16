@@ -83,6 +83,8 @@ both the staging and the actual data gathering output in one place.
 
 <img width="1812" height="423" alt="Image" src="https://github.com/user-attachments/assets/1f48c3dc-c7d4-4b10-b5f3-1fbb5bae9969" />
 
+*The `Untitled1_LAB.ps1` staging write near the top of the table — the surrounding `WerFault.exe` / `AppCrash_PickerHost.exe` rows are unrelated Windows Error Reporting noise, not attacker activity (see the known limitation above).*
+
 ## Panel 4: Risk Score Trend for this Account
 
 `index=risk` timechart of individual risk events over time for the account in scope: not the
