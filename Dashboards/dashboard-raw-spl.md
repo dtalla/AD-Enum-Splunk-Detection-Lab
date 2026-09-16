@@ -13,8 +13,6 @@ actually contains is visible for inspection, not just the CIM subset a normalize
 exposes. Use the companion **SOC Overview: Data Model (tstats)** dashboard instead for a
 fast, always on, whole environment view.
 
-Live at `10.0.0.225:8000`, Search & Reporting app, Classic (Simple XML) dashboard, private
-sharing.
 
 **Inputs:**
 
@@ -24,7 +22,6 @@ sharing.
 | user_tok | text | Prush | Scopes every panel to one account |
 | dest_tok | text (wildcard ok) | * | Optionally narrows to one host |
 
-`(add screenshot of the full dashboard here)`
 
 ## Panel 1: Incident Timeline (All Raw Events for this Account)
 
@@ -84,7 +81,7 @@ filter to `TargetFilename="*ProgramData*" OR TargetFilename="*AD_Reports_*"`, or
 panel dedicated to the `AD_Reports_*` output, so an analyst pivoting on one account can see
 both the staging and the actual data gathering output in one place.
 
-`(add screenshot of this panel here)`
+<img width="1812" height="423" alt="Image" src="https://github.com/user-attachments/assets/1f48c3dc-c7d4-4b10-b5f3-1fbb5bae9969" />
 
 ## Panel 4: Risk Score Trend for this Account
 
