@@ -56,50 +56,14 @@ consistently the artifact that actually left the host.
 | Archiving | Archive Creation via Compress-Archive | **no, see below** |
 | Exfiltration | Outbound to Nonstandard Destination | yes |
 
-`(add screenshot of the SPL results showing each rule firing here)`
+<img width="1900" height="542" alt="Image" src="https://github.com/user-attachments/assets/48d10eb3-23ec-4c50-af04-e532fa96909c" />
 
 Four distinct tactics and a risk total above 60 were reached **without** the archive rule,
 because the staging rule already contributes the Collection tactic. The correlation fired
 correctly on both runs. That redundancy is also what hid the broken rule. See
 `Docs/lessons-learned.md`, finding 9.
 
-## Issue: `Copy-Item` access denied for the second user
 
-Run 2 failed at the staging step:
-
-```
-Copy-Item : Access to the path 'C:\ProgramData\Untitled1_LAB.ps1' is denied.
-```
-
-`prush` had no such problem, and both accounts sit in the same user OU with the same group
-memberships.
-
-**Root cause: a per file ACL, not a rights problem.** `C:\ProgramData` carries an inheritable
-**CREATOR OWNER** ACE. `prush` created the file first, so the resulting ACL is:
-
-| Principal | Rights |
-|---|---|
-| `FAMTECH\prush` (owner) | FullControl |
-| `BUILTIN\Users` | ReadAndExecute |
-
-`ppitt` is in `Users`, so it can read and execute the file but cannot overwrite it. Identical
-accounts, different outcome, decided entirely by who created the file first.
-
-`(add screenshot of the Access Denied error and the resulting file ACL here)`
-
-**Fix.** Write per user filenames:
-
-```powershell
--Destination "C:\ProgramData\Untitled1_LAB_$($env:USERNAME).ps1"
-```
-
-The two scripts were later confirmed byte for byte identical (SHA256
-`2A4D6D9171661C26C217160C6E0AA057898C3CB1B62EB4D97E525A0D378C694C` for both), so the per user
-filename is a workaround for the ACL, not a second variant of the tool.
-
-**Related note.** `C:\` root grants `AppendData` (create folders) to Authenticated Users but
-not file creation, which is a useful constraint to know when choosing staging paths for a
-replication.
 
 ## Artifacts left on the host
 
