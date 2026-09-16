@@ -11,6 +11,7 @@ and it surfaced a Windows ACL problem worth documenting.
 | Result | full chain, correlation fired | full chain, correlation fired |
 | SOAR container | 78 | 79 |
 
+<img width="1889" height="458" alt="Image" src="https://github.com/user-attachments/assets/5b76a114-04a1-4447-8066-2b9528dfe7f5" />
 Combined telemetry across both runs, 7 day window: **274 events** on one host, Sysmon Event
 IDs 1 (process create), 3 (network connect) and 7 (image load), spanning 2026-09-08 to
 2026-09-13 18:42 UTC.
@@ -26,7 +27,9 @@ the DC, and 4104 script blocks on the endpoint.
 5. **Exfiltrate** with real `s5cmd.exe` to a self hosted MinIO endpoint on
 **10.0.0.134:9000** → Sysmon Event 3. 84 connections recorded across the window.
 
-`(add screenshot of the Splunk search confirming this event chain here)`
+Search showcasing the events chain. 
+
+<img width="1886" height="800" alt="Image" src="https://github.com/user-attachments/assets/5375024d-0239-4d69-b433-ba09184ac63e" />
 
 ## Note on the archive (zip) step
 
