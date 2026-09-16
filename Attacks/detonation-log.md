@@ -1,8 +1,7 @@
 # Detonation Log
 
 Two runs, one per account, on Endpoint-1 (10.0.0.102). The second run existed to prove the
-detections key on behaviour and identity rather than on anything specific to the first user,
-and it surfaced a Windows ACL problem worth documenting.
+detections key on behaviour and identity rather than on anything specific to the first user.
 
 | | Run 1 | Run 2 |
 |---|---|---|
@@ -12,6 +11,9 @@ and it surfaced a Windows ACL problem worth documenting.
 | SOAR container | 78 | 79 |
 
 <img width="1889" height="458" alt="Image" src="https://github.com/user-attachments/assets/5b76a114-04a1-4447-8066-2b9528dfe7f5" />
+
+*Splunk confirming the narrow command/image match for both accounts — 52 of ~1.1M events scanned. The 274-event total below is the broader raw Sysmon 1/3/7 volume across the same window; this query narrows to the specific commands and binaries used in the chain.*
+
 Combined telemetry across both runs, 7 day window: **274 events** on one host, Sysmon Event
 IDs 1 (process create), 3 (network connect) and 7 (image load), spanning 2026-09-08 to
 2026-09-13 18:42 UTC.
@@ -27,8 +29,7 @@ the DC, and 4104 script blocks on the endpoint.
 5. **Exfiltrate** with real `s5cmd.exe` to a self hosted MinIO endpoint on
 **10.0.0.134:9000** → Sysmon Event 3. 84 connections recorded across the window.
 
-Search showcasing the events chain. 
-
+*SPL confirming each stage fired for both accounts, by MITRE tactic — Archive Creation is absent for both, consistent with the documented gap below.*
 <img width="1886" height="800" alt="Image" src="https://github.com/user-attachments/assets/5375024d-0239-4d69-b433-ba09184ac63e" />
 
 ## Note on the archive (zip) step
@@ -57,6 +58,8 @@ consistently the artifact that actually left the host.
 
 <img width="1900" height="542" alt="Image" src="https://github.com/user-attachments/assets/48d10eb3-23ec-4c50-af04-e532fa96909c" />
 
+*Confirmed via Splunk's `_audit` index (`action=alert_fired`): each rule, plus the correlation search itself, fired exactly once — Archive Creation notably absent.*
+
 Four distinct tactics and a risk total above 60 were reached **without** the archive rule,
 because the staging rule already contributes the Collection tactic. The correlation fired
 correctly on both runs. That redundancy is also what hid the broken rule. See
@@ -80,14 +83,15 @@ All three were hashed and then quarantined to `C:\Quarantine_Case79` during the 
 response. No attacker persistence was found. Non Microsoft scheduled tasks on the host are
 Edge Update and OneDrive Reporting only, which matches the threat model: this chain is hands
 on keyboard with no persistence mechanism in the script.
-Powershell script ran from the SOAR platform on Endpoint-1, added are the command and output as Json view:
+Both remediation actions ran from the SOAR platform against Endpoint-1. Each pair below is the action's summary panel (left) and its expanded JSON output, `std_out` (right):
 Hashed script run:
-
 <img width="1872" height="821" alt="Image" src="https://github.com/user-attachments/assets/4cbeef21-29fb-4aa4-abc2-dc99085d46be" /><img width="1833" height="914" alt="Image" src="https://github.com/user-attachments/assets/848ea7ac-dc47-4208-abfd-3585e9a3fccc" />
 
 Quarantine script run:
 
 <img width="1876" height="825" alt="Image" src="https://github.com/user-attachments/assets/44720062-1d74-4206-83f8-de0be0581e79" /><img width="1821" height="919" alt="Image" src="https://github.com/user-attachments/assets/648069f2-5e46-487b-b3ae-20cf923c1a95" />
+
+*Both outputs above are prefixed with the `Atomic Red Team loaded. Type 'art-help'.` banner text — see the environment note below for why.*
 
 ## Environment note that cost real time
 
