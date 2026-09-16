@@ -53,7 +53,7 @@ records the SHA256 at execution time, and that data is already indexed. Sourcing
 telemetry pipeline is faster, puts no load on a possibly compromised host, and, as this
 incident proved, **still works when the host is unreachable**.
 
-> ### Gotcha: `phantom.format()` and regex quantifiers
+> ### Note: `phantom.format()` and regex quantifiers
 > The regex originally read `SHA256=(?<sha256>[A-F0-9]{64})` and the action failed with:
 > ```
 > IndexError: Replacement index 64 out of range
@@ -69,7 +69,8 @@ incident proved, **still works when the host is unreachable**.
 `run_query_1:action_result.action_result.data.*.sha256`: the output of one block feeding the
 input of the next, which is the entire point of a playbook rather than five separate actions.
 
-`(add screenshot of the enrichment playbook run and its VirusTotal verdict here)`
+<img width="1901" height="911" alt="image" src="https://github.com/user-attachments/assets/5fd2a9a5-7bab-4803-8d63-977f761a7b42" /><img width="1882" height="912" alt="Image" src="https://github.com/user-attachments/assets/0be6d44f-b543-4a57-a9a0-79c35f95f0b9" />
+
 
 ---
 
@@ -154,7 +155,7 @@ minute timer expires.
 > until answered. Run 12 had returned `success` instantly. **An instant success on a playbook
 > containing a human prompt is the tell.**
 
-`(add screenshot of the prompt block and the debug log entry here)`
+<img width="1490" height="775" alt="Image" src="https://github.com/user-attachments/assets/93de43f1-91f5-46f9-98af-85cf405e4803" />
 
 **`phantom.decision(...)`: branch on the answer.**
 
