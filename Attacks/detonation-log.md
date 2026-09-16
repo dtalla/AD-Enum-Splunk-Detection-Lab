@@ -35,8 +35,7 @@ Search showcasing the events chain.
 
 During the archive stage, `Compress-Archive` intermittently threw an Access Denied error
 against the FileStream handle for the target zip file. This traces back to the executing
-account not holding sufficient permission on `C:\ProgramData` at that path and moment (the
-same class of per file ACL issue described below for `Copy-Item`), not to a fault in the
+account not holding sufficient permission on `C:\ProgramData` at that path and moment, not to a fault in the
 script itself. The script's own catch block recovered from the error and the archive was
 still written to disk in most runs.
 
@@ -81,12 +80,18 @@ All three were hashed and then quarantined to `C:\Quarantine_Case79` during the 
 response. No attacker persistence was found. Non Microsoft scheduled tasks on the host are
 Edge Update and OneDrive Reporting only, which matches the threat model: this chain is hands
 on keyboard with no persistence mechanism in the script.
+Powershell script ran from the SOAR platform on Endpoint-1, added are the command and output as Json view:
+Hashed script run:
 
-`(add screenshot of the quarantine folder listing and hash verification here)`
+<img width="1872" height="821" alt="Image" src="https://github.com/user-attachments/assets/4cbeef21-29fb-4aa4-abc2-dc99085d46be" /><img width="1833" height="914" alt="Image" src="https://github.com/user-attachments/assets/848ea7ac-dc47-4208-abfd-3585e9a3fccc" />
+
+Quarantine script run:
+
+<img width="1876" height="825" alt="Image" src="https://github.com/user-attachments/assets/44720062-1d74-4206-83f8-de0be0581e79" /><img width="1821" height="919" alt="Image" src="https://github.com/user-attachments/assets/648069f2-5e46-487b-b3ae-20cf923c1a95" />
 
 ## Environment note that cost real time
 
-`C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1` prints
+I'm running Atomic Red team as persistent in my environment so `C:\Windows\System32\WindowsPowerShell\v1.0\profile.ps1` prints
 `Atomic Red Team loaded. Type 'art-help'.` at the start of **every** PowerShell session,
 including every WinRM session opened by SOAR. It breaks any connector action that parses
 stdout as JSON. Guard machine wide profiles with `if ($Host.Name -eq 'ConsoleHost') { ... }`
