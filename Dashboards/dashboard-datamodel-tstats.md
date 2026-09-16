@@ -32,6 +32,8 @@ by Authentication.user, Authentication.dest
 ```
 <img width="1864" height="289" alt="Image" src="https://github.com/user-attachments/assets/48f42ca3-6894-42c2-9be8-3c6c1453a5ad" />
 
+*Real 7-day data: `prush` and `ppitt`'s RDP logon spikes on the detonation days, against the account baseline.*
+
 ## Panel 2: Top Processes by Distinct AD Object Classes Queried
 
 Counts, per process, how many distinct AD object classes (`user`, `computer`, `group`, and so
@@ -50,6 +52,8 @@ by Change.user, _time span=1h
 
 <img width="1848" height="671" alt="Image" src="https://github.com/user-attachments/assets/5b6b5eb9-a996-445a-a0a0-f0f99bf6be54" />
 
+*Real data: five distinct AD object classes queried per account (`computer`, `group`, `organizationalUnit`/`topology`, `trustedDomain`, and `user`), well above the rule's threshold of three — the enumeration script's breadth, not just its volume, is what the rule keys on.*
+
 ## Panel 3: File Staging Activity by Host
 
 Counts distinct CSV files created per host in a short window, meant to catch the "several
@@ -65,21 +69,28 @@ by Filesystem.dest, _time span=15m
 ```
 <img width="1852" height="272" alt="Image" src="https://github.com/user-attachments/assets/00d08b2a-de11-4ade-a363-de8235026294" />
 
+*Endpoint-1.famtech.local's CSV staging bursts across the 7-day window, one bar per detonation run.*
+
 ## Panel 4: Live Risk Board, Open Risk Objects
 
-Table of every account currently carrying summed risk, pulled straight from `index=risk`
-rather than a data model, since risk events are a lab specific index and not part of any CIM
-data model. Kept on this dashboard rather than moved to the raw SPL companion because it is
-meant to be glanced at continuously, the same way the rest of this board is.
+Table of every account currently carrying risk, pulled straight from `index=risk` rather
+than a data model, since risk events are a lab specific index and not part of any CIM data
+model. Kept on this dashboard rather than moved to the raw SPL companion because it is meant
+to be glanced at continuously, the same way the rest of this board is. Runs unfiltered over
+the dashboard's own time range, no score/tactic threshold, so it's a running board of every
+account currently accumulating risk, not just the ones that have already crossed the
+correlation search's combined score-and-tactic-diversity bar.
 
 ```spl
-index=risk earliest=-24h
-| stats sum(risk_score) as total_risk, dc(mitre_tactic) as tactic_count,
-values(mitre_tactic) as tactics by risk_object
-| where total_risk >= 60 AND tactic_count >= 4
+index=risk sourcetype=risk_event project="famtech-ad-enum"
+| stats values(mitre_tactic) as tactics, sum(risk_score) as total_risk,
+values(risk_message) as reasons by risk_object
+| eval tactic_count=mvcount(tactics)
 | sort - total_risk
 ```
 <img width="1858" height="648" alt="Image" src="https://github.com/user-attachments/assets/0f0763b5-7b71-47a1-95ab-3ce51ede8d77" />
+
+*Live on Sep 16, three days after the Sep 13 detonation — this panel runs over the dashboard's own time range rather than a hardcoded window, so `prush` and `ppitt` stay on the board for as long as their underlying `index=risk` events remain in the selected range (here, Last 7 days).*
 
 ## Investigation and fixes (Sep 13, 2026)
 
