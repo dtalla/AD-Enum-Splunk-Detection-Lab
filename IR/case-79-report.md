@@ -139,6 +139,8 @@ failed.
 <img width="2785" height="1321" alt="Image" src="https://github.com/user-attachments/assets/8b04341d-5609-4870-a349-cc95b2a8f673" />
 <img width="2822" height="1504" alt="Image" src="https://github.com/user-attachments/assets/43b1fe4e-d332-49e9-a4c2-c2f75f4ee779" />
 
+*Two of the lockout's own artifacts: the read-timeout failure on recovery validation (left) and the domain-auth-failure query — EventCode 5719/4625 — that traced it to the severed NETLOGON secure channel (right).*
+
 **Root cause.** The SOAR endpoint asset authenticates as `famtech\svr_soar` **over NTLM**: a
 *domain* account. NTLM pass through requires the member host to reach a domain controller. The
 DC is 192.168.30.101, confirmed from pre incident Sysmon Event 3 traffic (341 connections to
