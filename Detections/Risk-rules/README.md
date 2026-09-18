@@ -11,8 +11,8 @@ window, against the *same account*, is the signal. See `correlation-search.md`.
 | 1 | AD Object Class Enumeration | T1087.002, T1018, T1482 | Discovery | 15 | `index=us_domain` 4662 | `-30m` → `now` |
 | 2 | Bulk File Staging in ProgramData | T1074.001 | Collection | 25 | `index=end-user` Sysmon 11 | `-30m` → `now` |
 | 3 | Archive Creation via Compress-Archive | T1560.001 | Collection | 20 | `index=end-user` Sysmon 11 | `-30m` → `now` |
-| 4 | RDP Logon to Domain Asset | T1078.002, T1021.001 | Lateral Movement | 10 | `datamodel=Authentication` | `-10m@m` → `-5m@m` |
-| 5 | Outbound to Nonstandard Destination | T1567.002 | Exfiltration | 30 | `datamodel=Network_Traffic` | `-10m@m` → `-5m@m` |
+| 4 | RDP Logon to Domain Asset | T1078.002, T1021.001 | Lateral Movement | 10 | `index=end-user` `eventtype=windows_security_authentication` | `-10m@m` → `-5m@m` |
+| 5 | Outbound to Nonstandard Destination | T1567.002 | Exfiltration | 30 | `index=end-user` `tag=network tag=communicate` | `-10m@m` → `-5m@m` |
 
 All five on cron `*/5`. Maximum achievable total is 100; the correlation threshold is 60 and
 4 distinct tactics, so no two rules alone can trip it, and the two Collection rules together
@@ -143,14 +143,12 @@ Note it matches **any** archive extension and **any** creating process, not
 ## 4. RDP Logon to Domain Asset: T1078.002 / T1021.001
 
 ```spl
-| tstats summariesonly=true count, min(_time) as first_seen
-from datamodel=Authentication
-where Authentication.action=success
-Authentication.app=win:remote /* CIM's normalisation of Logon_Type 10 */
-NOT Authentication.dest IN ("localhost","127.0.0.1","-")
-by Authentication.user, Authentication.dest
-| rename Authentication.* as *
-| search `exclude_noise_accounts(user)` /* AFTER rename, fields are bare now */
+index=end-user
+eventtype=windows_security_authentication
+action=success app=win:remote
+NOT dest IN ("localhost","127.0.0.1","-")
+`exclude_noise_accounts(user)` /* raw index+eventtype search, not tstats/datamodel -- see FIXED note below */
+| stats count, min(_time) as first_seen by user, dest
 | eval risk_message="Interactive remote (RDP) logon by ".user." to ".dest
 | `risk_finding(user, "T1078.002,T1021.001", "Lateral Movement", 10)`
 ```
@@ -166,9 +164,7 @@ every single time. It is a *presence* rule, not a threshold rule: its job is to 
 one timestamped user/dest pair and one tactic toward the correlation, never to be
 interesting alone.
 
-**Note the `| search` before the macro.** After `rename`, the field is bare `user`, so the
-macro has to be applied through a `search` command rather than inline in the `tstats where`
-clause, because `tstats` cannot filter on a renamed field it has not produced yet.
+**FIXED (Sep 2026): this rule (and rule 5) wrote zero risk events regardless of the search window.** Two independent bugs, both on the search-scoping side rather than in the detection logic. First, the `admin` role's default search indexes did not include `end-user`, `us_domain`, or `risk` even though those indexes were individually "Included" for the role -- Splunk only auto-searches a role's *default* indexes when no `index=` is given, so every index-less `tstats ... from datamodel=X` search here was silently scoped to `main` plus the internal indexes and never touched the lab's data at all. Second, and separately, `tag=authentication` does not resolve to any events on this instance even with an explicit `index=` -- `eventtype=windows_security_authentication` (the eventtype that tag is supposed to map to) resolves fine, and every other CIM tag used in this lab (`endpoint`, `filesystem`, `network`, `communicate`) resolves normally, so this looks like a bad `tags.conf` stanza rather than a Windows TA problem. Because `datamodel=Authentication` constrains its underlying search using that same broken tag, rewriting this rule as a `tstats`/datamodel search could never have worked here regardless of the index fix. The rule was rewritten as a raw `index=`-scoped search using `eventtype=` directly instead of the datamodel, and the macro now runs inline in the base search because the Windows TA's field aliases already expose clean `user`/`dest` fields on the raw event -- no `rename` step is needed, so there is no bare-field ordering problem to work around.
 
 `(add screenshot of SPL results validating this rule fired here)`
 
@@ -177,18 +173,14 @@ clause, because `tstats` cannot filter on a renamed field it has not produced ye
 ## 5. Outbound Connection to a Nonstandard Destination: T1567.002
 
 ```spl
-| tstats summariesonly=true count, min(_time) as first_seen
-from datamodel=Network_Traffic
-where All_Traffic.action=allowed
-All_Traffic.dest_port=9000 /* MinIO, the lab's S3 stand in */
-NOT All_Traffic.dest_ip IN ("192.168.30.0/24","10.0.0.225","10.0.0.140")
-by All_Traffic.user, All_Traffic.src, All_Traffic.dest_ip,
-All_Traffic.dest_port, All_Traffic.app
-| rename All_Traffic.* as *
+index=end-user
+tag=network tag=communicate
+action=allowed dest_port=9000 /* MinIO, the lab's S3 stand in */
+NOT dest_ip IN ("192.168.30.0/24","10.0.0.225","10.0.0.140")
+| stats count, min(_time) as first_seen by user, src, dest_ip, dest_port, app
 | lookup famtech_assets src OUTPUT owner /* host -> owner, see below */
 | eval user=if(isnull(user) OR user="unknown" OR user="-" OR user="", owner, user)
-| eval risk_message="Host ".src." (".user.") sent data to ".dest_ip.":".dest_port
-." using ".app
+| eval risk_message="Host ".src." (".user.") sent data to ".dest_ip.":".dest_port." using ".app
 | `risk_finding(user, "T1567.002", "Exfiltration", 30)`
 ```
 
@@ -216,5 +208,7 @@ something outside its normal blast radius."
 This is also the rule that produced the evidence used during eradication: the destination it
 flagged, `10.0.0.134:9000` reached by `C:\ProgramData\s5cmd.exe`, was blocked at the
 perimeter before host containment was lifted.
+
+This rule wrote zero risk events for the same reason rule 4 did -- see the FIXED note under rule 4 above. The `tag=network tag=communicate` pair used here resolves fine on this instance; it was specifically the `datamodel=Network_Traffic` search plus the missing default index, not this rule's own logic, that kept it silent.
 
 `(add screenshot of SPL results validating this rule fired, and of the blocked destination, here)`
