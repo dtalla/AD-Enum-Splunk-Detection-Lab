@@ -226,6 +226,9 @@ had happened on Endpoint-1
 
 <img width="2783" height="1511" alt="Image" src="https://github.com/user-attachments/assets/d8aa290c-9a03-4a21-84be-36189ce56cc1" />
 
+*Container 77, before the fix — one correlation result exploded into five duplicate artifacts (IDs 172–176), each labeled identically.*
+
+
 An analyst reading that artifact would have reached a false conclusion about where the attack
 occurred. That is worse than a missed alert. It is a confidently wrong one.
 
