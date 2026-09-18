@@ -54,7 +54,7 @@ every account on the network.
 **Requires:** "Audit Directory Service Access" enabled on the DC. If 4662 is sparse, that is
 a GPO tuning step, not a failed detection.
 
-`(add screenshot of SPL results validating this rule fired here)`
+<img width="1886" height="554" alt="Image" src="https://github.com/user-attachments/assets/d5865973-7260-4062-92d3-d53d2400c176" />
 
 ---
 
@@ -87,7 +87,7 @@ below what the attack produces.
 somewhere else is the obvious evasion, and the directory grouping already carries the
 signal.
 
-`(add screenshot of SPL results validating this rule fired here)`
+<img width="1900" height="525" alt="Image" src="https://github.com/user-attachments/assets/00cd0d48-3042-4fa6-90be-b9b65d52027b" />
 
 ---
 
@@ -113,17 +113,8 @@ Note it matches **any** archive extension and **any** creating process, not
 `Compress-Archive` specifically. The name is historical; the logic is tool agnostic.
 
 > ### KNOWN GAP: this rule has never fired
-> Despite archive creation in every detonation, this rule has produced zero risk events.
-> Leading hypothesis: the Sysmon config's FileCreate (Event ID 11) section excludes archive
-> extensions, or includes only a specific directory set, so the event never reaches the
-> index. To confirm:
-> ```spl
-> index=end-user tag=endpoint tag=filesystem TargetFilename="*.zip" earliest=-7d | head 20
-> ```
-> If that returns nothing, it is a telemetry gap, not a rule bug, and the fix is in
-> `sysmonconfig.xml`, not in SPL.
 >
-> A second, contributing factor: the archive step itself has thrown Access Denied errors
+> A contributing factor: the archive step itself has thrown Access Denied errors
 > during detonation, traced to the executing account not holding sufficient permission on the
 > target path at that moment rather than to the script. See `Attacks/detonation-log.md`. When
 > that happens the archive is not reliably the artifact that leaves the host, since exfil was
@@ -136,7 +127,6 @@ Note it matches **any** archive extension and **any** creating process, not
 > still reached four tactics. The gap was masked by redundancy, which is exactly how this
 > kind of thing survives unnoticed.
 
-`(add screenshot of the SPL query above and its result count here)`
 
 ---
 
@@ -164,9 +154,9 @@ every single time. It is a *presence* rule, not a threshold rule: its job is to 
 one timestamped user/dest pair and one tactic toward the correlation, never to be
 interesting alone.
 
-**FIXED (Sep 2026): this rule (and rule 5) wrote zero risk events regardless of the search window.** Two independent bugs, both on the search-scoping side rather than in the detection logic. First, the `admin` role's default search indexes did not include `end-user`, `us_domain`, or `risk` even though those indexes were individually "Included" for the role -- Splunk only auto-searches a role's *default* indexes when no `index=` is given, so every index-less `tstats ... from datamodel=X` search here was silently scoped to `main` plus the internal indexes and never touched the lab's data at all. Second, and separately, `tag=authentication` does not resolve to any events on this instance even with an explicit `index=` -- `eventtype=windows_security_authentication` (the eventtype that tag is supposed to map to) resolves fine, and every other CIM tag used in this lab (`endpoint`, `filesystem`, `network`, `communicate`) resolves normally, so this looks like a bad `tags.conf` stanza rather than a Windows TA problem. Because `datamodel=Authentication` constrains its underlying search using that same broken tag, rewriting this rule as a `tstats`/datamodel search could never have worked here regardless of the index fix. The rule was rewritten as a raw `index=`-scoped search using `eventtype=` directly instead of the datamodel, and the macro now runs inline in the base search because the Windows TA's field aliases already expose clean `user`/`dest` fields on the raw event -- no `rename` step is needed, so there is no bare-field ordering problem to work around.
+**FIXED: this rule (and rule 5) wrote zero risk events regardless of the search window.** Two independent bugs, both on the search-scoping side rather than in the detection logic. First, the `admin` role's default search indexes did not include `end-user`, `us_domain`, or `risk` even though those indexes were individually "Included" for the role -- Splunk only auto-searches a role's *default* indexes when no `index=` is given, so every index-less `tstats ... from datamodel=X` search here was silently scoped to `main` plus the internal indexes and never touched the lab's data at all. Second, and separately, `tag=authentication` does not resolve to any events on this instance even with an explicit `index=` -- `eventtype=windows_security_authentication` (the eventtype that tag is supposed to map to) resolves fine, and every other CIM tag used in this lab (`endpoint`, `filesystem`, `network`, `communicate`) resolves normally, so this looks like a bad `tags.conf` stanza rather than a Windows TA problem. Because `datamodel=Authentication` constrains its underlying search using that same broken tag, rewriting this rule as a `tstats`/datamodel search could never have worked here regardless of the index fix. The rule was rewritten as a raw `index=`-scoped search using `eventtype=` directly instead of the datamodel, and the macro now runs inline in the base search because the Windows TA's field aliases already expose clean `user`/`dest` fields on the raw event -- no `rename` step is needed, so there is no bare-field ordering problem to work around.
 
-`(add screenshot of SPL results validating this rule fired here)`
+<img width="1896" height="544" alt="Image" src="https://github.com/user-attachments/assets/b10f37a5-ec64-48ea-b7e7-88fb9ff71394" />
 
 ---
 
@@ -211,4 +201,4 @@ perimeter before host containment was lifted.
 
 This rule wrote zero risk events for the same reason rule 4 did -- see the FIXED note under rule 4 above. The `tag=network tag=communicate` pair used here resolves fine on this instance; it was specifically the `datamodel=Network_Traffic` search plus the missing default index, not this rule's own logic, that kept it silent.
 
-`(add screenshot of SPL results validating this rule fired, and of the blocked destination, here)`
+<img width="1905" height="529" alt="Image" src="https://github.com/user-attachments/assets/398e3da7-3cc9-4cd5-bc94-98320e93a821" />
