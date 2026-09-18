@@ -91,6 +91,8 @@ signal.
 
 <img width="1900" height="525" alt="Image" src="https://github.com/user-attachments/assets/00cd0d48-3042-4fa6-90be-b9b65d52027b" />
 
+*Rule 2 firing on the same run: ppitt wrote 9 CSV files into one staging directory on Endpoint-1.*
+
 ---
 
 ## 3. Archive Creation via Compress-Archive: T1560.001
