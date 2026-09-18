@@ -45,6 +45,8 @@ was available to any authenticated user, by design of Active Directory.
 
 <img width="2843" height="1539" alt="Image" src="https://github.com/user-attachments/assets/639f144b-f240-4ef3-b6c7-753b4a6c44ee" />
 
+*The SOAR case timeline (Analyst view) for Case 79, spanning enrichment through isolation, eradication, and recovery validation.*
+
 ## 3. NIST 800-61 prioritisation
 
 | Dimension | Rating | Reasoning |
