@@ -162,6 +162,8 @@ interesting alone.
 
 <img width="1896" height="544" alt="Image" src="https://github.com/user-attachments/assets/b10f37a5-ec64-48ea-b7e7-88fb9ff71394" />
 
+*Rule 4 firing after the fix — ppitt's RDP logon to Endpoint-1, correctly scored and tactic-tagged (Lateral Movement).*
+
 ---
 
 ## 5. Outbound Connection to a Nonstandard Destination: T1567.002
