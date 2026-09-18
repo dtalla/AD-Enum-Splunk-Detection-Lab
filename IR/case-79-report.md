@@ -120,6 +120,8 @@ in the next section could be diagnosed at all rather than guessed at.
 
 <img width="2849" height="1564" alt="Image" src="https://github.com/user-attachments/assets/2dafcaac-8d06-4a19-b272-1490da6aae4b" />
 
+*SOAR action run 67 — the containment validation query confirming 32,009 Sysmon events still flowing from the isolated host, the evidence that made the lockout diagnosable.*
+
 
 ## 7. The containment lockout
 
