@@ -38,12 +38,12 @@ was available to any authenticated user, by design of Active Directory.
 | ~19:52 | **Remote access to the host lost** | action runs 65, 66 |
 | ~19:55 | Splunk confirms the forwarder is still reporting from the isolated host | action run 67 |
 | ~20:00 | Root cause identified: NETLOGON secure channel severed | action run 70 |
-| n/a | Exfiltration destination identified and blocked at the perimeter | action run 74 |
-| n/a | Containment lifted at the VM console | analyst, console |
-| n/a | Restoration verified: firewall state, secure channel, WinRM | action run 73 |
-| n/a | Artifacts hashed, then quarantined; persistence checked | action runs 75, 76 |
+| 20:10 | Exfiltration destination identified and blocked at the perimeter | action run 74 |
+| 21:03 | Containment lifted at the VM console | analyst, console |
+| 21:05 | Restoration verified: firewall state, secure channel, WinRM | action run 73 |
+| 21:08 | Artifacts hashed, then quarantined; persistence checked | action runs 75, 76 |
 
-`(add screenshot of the case timeline in SOAR here)`
+<img width="2843" height="1539" alt="Image" src="https://github.com/user-attachments/assets/639f144b-f240-4ef3-b6c7-753b4a6c44ee" />
 
 ## 3. NIST 800-61 prioritisation
 
@@ -84,10 +84,10 @@ min(_time) as first_seen, max(_time) as last_seen by host
 | sort - events
 ```
 
-One row returned: `Endpoint-1`, 274 events, accounts `ppitt` and `prush`, Sysmon Event IDs
-1, 3 and 7, spanning 2026-09-08 to 2026-09-13 18:42 UTC. *(action run 64)*
+One row returned: `Endpoint-1`, 124 events, accounts `ppitt` and `prush`, Sysmon Event IDs
+1, 3 and 7. *(action run 64)*
 
-`(add screenshot of the scope sweep results, action run 64, here)`
+<img width="1751" height="680" alt="Image" src="https://github.com/user-attachments/assets/85aff50d-a961-4c7c-800a-7c4761149f12" />
 
 **Stated limits of that conclusion.** The sweep is indicator based, not behaviour based, so a
 renamed binary or a different cmdlet would evade it. Coverage extends only as far as Sysmon is
@@ -111,10 +111,11 @@ duplicate firewall rules.
 
 The forwarder egress exception was added deliberately before the run. It is the reason
 `index=end-user host=Endpoint-1 earliest=-30m` still returned **32,009 events, the most
-recent 24 seconds before the query** *(action run 67)*, and therefore the reason the failure
+recent 24 seconds before the query** *(action run 55)*, and therefore the reason the failure
 in the next section could be diagnosed at all rather than guessed at.
 
-`(add screenshot of the before/after firewall state, action run 63, here)`
+<img width="2849" height="1564" alt="Image" src="https://github.com/user-attachments/assets/2dafcaac-8d06-4a19-b272-1490da6aae4b" />
+
 
 ## 7. The containment lockout
 
@@ -129,7 +130,8 @@ failed.
 | 4 | **Event 5719**: NETLOGON could not set up a secure session with a domain controller (×1) | action run 70 |
 | 5 | **Event 4625**: failed logon (×2, one per failed SOAR action) | action run 70 |
 
-`(add screenshot of the failed WinRM actions and Events 5719/4625 in Splunk here)`
+<img width="2785" height="1321" alt="Image" src="https://github.com/user-attachments/assets/8b04341d-5609-4870-a349-cc95b2a8f673" />
+<img width="2822" height="1504" alt="Image" src="https://github.com/user-attachments/assets/43b1fe4e-d332-49e9-a4c2-c2f75f4ee779" />
 
 **Root cause.** The SOAR endpoint asset authenticates as `famtech\svr_soar` **over NTLM**: a
 *domain* account. NTLM pass through requires the member host to reach a domain controller. The
@@ -177,7 +179,9 @@ files matching the incident indicators remaining in `C:\ProgramData`: **0**.
 OneDrive Reporting only. Consistent with the threat model: this chain is hands on keyboard
 with no persistence mechanism in the script.
 
-`(add screenshot of the quarantine action and hash verification, action runs 75 and 76, here)`
+<img width="2769" height="1513" alt="Image" src="https://github.com/user-attachments/assets/a373f2d2-b2c7-461a-b887-aee6754cc8fd" />
+<img width="2823" height="1383" alt="image" src="https://github.com/user-attachments/assets/6ca2350b-8abe-4eb1-8aa9-f1325c7c1b1b" />
+
 
 **Restoration, performed at the VM console** because SOAR had no path to the host:
 
@@ -196,7 +200,8 @@ a credential rejection to a read timeout, which is what separated the two causes
 `Test-ComputerSecureChannel` returns **True**; remote script execution succeeded, which is
 itself the proof the response path is back.
 
-`(add screenshot of action run 73 confirming restoration here)`
+<img width="2693" height="1029" alt="image" src="https://github.com/user-attachments/assets/8c5ded77-e1fb-4aa7-8d06-6f3c4f49a7c2" />
+
 
 **Detection capability preserved throughout.** `EnableScriptBlockLogging = 1` confirmed at
 `HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging`. Neither the lockdown
@@ -224,11 +229,4 @@ masked by a second rule covering the same tactic.
 - One SOAR action (`list processes`) fails on this host because a machine wide PowerShell
 profile prints a banner that corrupts the connector's JSON parse.
 
-## 11. Open items
 
-- Reset `prush` and `ppitt`; revoke Kerberos tickets.
-- Move the SOAR endpoint asset to a local break glass account.
-- Add a post isolation reachability probe to the containment playbook, alerting on failure.
-- Fix the machine wide PowerShell profile (`if ($Host.Name -eq 'ConsoleHost') { ... }`).
-- Confirm and fix the Archive Creation telemetry gap in the Sysmon config.
-- Remove the `user` role from the Splunk search service account and rotate its password.
