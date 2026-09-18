@@ -29,6 +29,8 @@ by risk_object /* the ACCOUNT is the story's spine */
 
 <img width="1651" height="658" alt="Image" src="https://github.com/user-attachments/assets/3f345dab-59e6-43f2-8ee2-579453737965" />
 
+*The correlation search's alert configuration in Splunk — enabled, cron scheduled, two actions on trigger (add to Triggered Alerts, Send to SOAR), with a recent trigger visible in the history below.*
+
 ---
 
 ## Why both thresholds, never either alone
@@ -102,6 +104,8 @@ the risk event is written
 11:15 the correlation search runs, sees 4 distinct tactics for prush, fires
 ```
 <img width="1722" height="817" alt="Image" src="https://github.com/user-attachments/assets/d586b079-4341-4218-bdb1-3632bb38c83a" />
+
+*The actual risk index events behind this pattern — real timestamps snap to the rules' 5-minute cadence (10:55, 11:00, 11:05), the same staggered-arrival effect the illustrative 11:02→11:15 walkthrough above is modeling.*
 
 Thirteen minutes from the last attacker action to the notable, and every minute of it was a
 design decision rather than an accident.
