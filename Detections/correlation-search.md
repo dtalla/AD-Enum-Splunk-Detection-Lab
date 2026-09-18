@@ -134,7 +134,7 @@ notable every 15 minutes for the next hour, because the risk events stay inside 
 sixty minute window. The throttle key is `risk_object`, not the whole result, so prush
 being throttled does not suppress a genuinely new notable for ppitt.
 
-## The three timing bugs we actually hit
+## The three timing bugs I actually hit
 
 **1. Overcounting (fixed by `new_events_only`).** Six overlapping windows meant six risk
 events per real event. Symptom: a risk score far larger than the five rules could produce.
