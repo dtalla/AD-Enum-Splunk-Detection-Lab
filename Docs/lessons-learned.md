@@ -25,7 +25,7 @@ than the playbook that changed it. Every isolation playbook ends with a verifica
 whose failure raises its own alert. And treat an *instant* success on a playbook containing a
 human prompt as a red flag: a prompt that was actually delivered leaves the run in `running`.
 
-`(add screenshot comparing playbook run 12, instant success, and run 13, status running, here)`
+
 
 ## 2. Containment that ignores the responder's access path will remove it
 
