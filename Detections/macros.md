@@ -224,7 +224,7 @@ Observed on SOAR container 77:
 - artifact 172 attributed Collection activity **to the domain controller**, when the staging
 had happened on Endpoint-1
 
-`(add screenshot of SOAR container 77 showing the five duplicate artifacts here)`
+<img width="2783" height="1511" alt="Image" src="https://github.com/user-attachments/assets/d8aa290c-9a03-4a21-84be-36189ce56cc1" />
 
 An analyst reading that artifact would have reached a false conclusion about where the attack
 occurred. That is worse than a missed alert. It is a confidently wrong one.
