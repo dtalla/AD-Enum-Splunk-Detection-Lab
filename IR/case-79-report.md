@@ -91,6 +91,8 @@ One row returned: `Endpoint-1`, 124 events, accounts `ppitt` and `prush`, Sysmon
 
 <img width="1751" height="680" alt="Image" src="https://github.com/user-attachments/assets/85aff50d-a961-4c7c-800a-7c4761149f12" />
 
+*The actual scope-sweep result behind this query — 46 events across both accounts on Endpoint-1, not the 124 cited above; the two were captured from different runs of the lab.*
+
 **Stated limits of that conclusion.** The sweep is indicator based, not behaviour based, so a
 renamed binary or a different cmdlet would evade it. Coverage extends only as far as Sysmon is
 deployed. A host with no forwarder is invisible to this query, which is itself a visibility
