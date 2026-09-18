@@ -208,3 +208,5 @@ perimeter before host containment was lifted.
 This rule wrote zero risk events for the same reason rule 4 did -- see the FIXED note under rule 4 above. The `tag=network tag=communicate` pair used here resolves fine on this instance; it was specifically the `datamodel=Network_Traffic` search plus the missing default index, not this rule's own logic, that kept it silent.
 
 <img width="1905" height="529" alt="Image" src="https://github.com/user-attachments/assets/398e3da7-3cc9-4cd5-bc94-98320e93a821" />
+
+*Rule 5 firing: prush's host sent 7 connections to 10.0.0.134:9000 — the `famtech_assets` lookup resolving `owner=prush` even with the app field coming back unknown.*
