@@ -56,7 +56,7 @@ Purpose: establish that something real happened, and what.
 > concluded the staging happened on the domain controller. "Does the artifact count match the
 > result rows?" belongs in task 1.
 
-`(add screenshot of the correlation search result and the resulting SOAR artifact count here)`
+
 
 ## Phase 2: Analysis and Containment
 
