@@ -52,7 +52,7 @@ by Change.user, _time span=1h
 
 <img width="1848" height="671" alt="Image" src="https://github.com/user-attachments/assets/5b6b5eb9-a996-445a-a0a0-f0f99bf6be54" />
 
-*Real data: five distinct AD object classes queried per account (`computer`, `group`, `organizationalUnit`/`topology`, `trustedDomain`, and `user`), well above the rule's threshold of three — the enumeration script's breadth, not just its volume, is what the rule keys on.*
+*Real data: five distinct AD object classes queried per account (`computer`, `group`, `organizationalUnit`/`topology`, `trustedDomain`, and `user`), well above the rule's threshold of three.*
 
 ## Panel 3: File Staging Activity by Host
 
@@ -92,7 +92,7 @@ values(risk_message) as reasons by risk_object
 
 *Live on Sep 16, three days after the Sep 13 detonation — this panel runs over the dashboard's own time range rather than a hardcoded window, so `prush` and `ppitt` stay on the board for as long as their underlying `index=risk` events remain in the selected range (here, Last 7 days).*
 
-## Investigation and fixes (Sep 13, 2026)
+## Investigation and fixes 
 
 Four bugs found and fixed while validating this dashboard against a live detonation, in the
 order they were found.
