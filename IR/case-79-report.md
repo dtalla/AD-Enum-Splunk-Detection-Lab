@@ -212,6 +212,8 @@ itself the proof the response path is back.
 
 <img width="2693" height="1029" alt="image" src="https://github.com/user-attachments/assets/8c5ded77-e1fb-4aa7-8d06-6f3c4f49a7c2" />
 
+*SOAR action run 56 — the recovery validation confirming firewall profiles disabled, secure channel restored, and no residual artifacts on the host.*
+
 
 **Detection capability preserved throughout.** `EnableScriptBlockLogging = 1` confirmed at
 `HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging`. Neither the lockdown
