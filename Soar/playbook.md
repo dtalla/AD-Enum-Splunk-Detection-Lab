@@ -71,6 +71,8 @@ input of the next, which is the entire point of a playbook rather than five sepa
 
 <img width="1901" height="911" alt="image" src="https://github.com/user-attachments/assets/5fd2a9a5-7bab-4803-8d63-977f761a7b42" /><img width="1882" height="912" alt="Image" src="https://github.com/user-attachments/assets/0be6d44f-b543-4a57-a9a0-79c35f95f0b9" />
 
+*The AD_Enum_Enrichment playbook's actions in the case Analyst view (left) and the VirusTotal file-reputation result behind it — 0 of 70 scanners flagging the s5cmd.exe hash (right).*
+
 
 ---
 
