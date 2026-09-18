@@ -56,6 +56,8 @@ a GPO tuning step, not a failed detection.
 
 <img width="1886" height="554" alt="Image" src="https://github.com/user-attachments/assets/d5865973-7260-4062-92d3-d53d2400c176" />
 
+*Rule 1 firing on a recent run: ppitt read 7 distinct AD object classes at the DC — well above the threshold of 3.*
+
 ---
 
 ## 2. Bulk File Staging in ProgramData: T1074.001
