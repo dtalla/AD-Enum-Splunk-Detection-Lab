@@ -159,6 +159,8 @@ minute timer expires.
 
 <img width="1490" height="775" alt="Image" src="https://github.com/user-attachments/assets/93de43f1-91f5-46f9-98af-85cf405e4803" />
 
+*The playbook status log for run 12: the prompt block's invalid `to` parameter dropped the callback silently, yet the run still closed with status `success`.*
+
 **`phantom.decision(...)`: branch on the answer.**
 
 ```python
