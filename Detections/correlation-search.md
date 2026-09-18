@@ -27,7 +27,7 @@ by risk_object /* the ACCOUNT is the story's spine */
 **Throttle:** suppress on `risk_object`, 60 minutes
 **Alert action:** `sendtophantom`
 
-`(add screenshot of the notable firing in Splunk here)`
+<img width="1651" height="658" alt="Image" src="https://github.com/user-attachments/assets/3f345dab-59e6-43f2-8ee2-579453737965" />
 
 ---
 
@@ -101,8 +101,7 @@ so at 11:05 it is looking at 10:55-11:00 - the 11:02 event is not in range yet
 the risk event is written
 11:15 the correlation search runs, sees 4 distinct tactics for prush, fires
 ```
-
-`(add screenshot of the risk index events feeding this timeline here)`
+<img width="1722" height="817" alt="Image" src="https://github.com/user-attachments/assets/d586b079-4341-4218-bdb1-3632bb38c83a" />
 
 Thirteen minutes from the last attacker action to the notable, and every minute of it was a
 design decision rather than an accident.
