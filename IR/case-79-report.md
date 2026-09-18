@@ -190,6 +190,8 @@ with no persistence mechanism in the script.
 <img width="2769" height="1513" alt="Image" src="https://github.com/user-attachments/assets/a373f2d2-b2c7-461a-b887-aee6754cc8fd" />
 <img width="2823" height="1383" alt="image" src="https://github.com/user-attachments/assets/6ca2350b-8abe-4eb1-8aa9-f1325c7c1b1b" />
 
+*The two eradication actions behind the hashes and quarantine above — run 58 hashing the artifacts in place, run 59 moving them into C:\Quarantine_Case79.*
+
 
 **Restoration, performed at the VM console** because SOAR had no path to the host:
 
