@@ -16,7 +16,7 @@ host, and cannot proceed without a human. That split is the whole design.
 
 ```
 Start → run query (splunk-es) → list sessions (endpoint-1) → run script (endpoint-1)
-→ file reputation (virustotal) → End
+→ file reputation (virustotal) → End 
 ```
 
 Fires the moment the correlation search's artifact lands, so by the time an analyst opens the
