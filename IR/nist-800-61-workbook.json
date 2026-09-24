@@ -40,7 +40,7 @@
 ]
 },
 {
-"name": "Eradicate",
+"name": "Eradicate ",
 "order": 3,
 "tasks": [
 { "name": "Identify and mitigate all vulnerabilities", "order": 1, "is_note_required": true,
