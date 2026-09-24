@@ -42,7 +42,7 @@ One `Get-ADUser` call, or a few CSVs in ProgramData, happens on a real network f
 reasons. Alerting on any of them individually is how a queue becomes permanently ignored. The
 *combination*, in a short window, against the *same account*, is the signal.
 
-So each rule writes a low severity entry to `index=risk` and pages nobody. One correlation
+So each rule writes a low severity entry to `index=risk` and pages nobody. One correlation 
 search turns them into a single investigation. The threshold, `total_risk >= 60 AND
 tactic_count >= 4`, is set so that no two rules alone can trip it.
 
