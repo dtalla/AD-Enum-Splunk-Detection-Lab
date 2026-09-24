@@ -24,7 +24,7 @@ is a program, not a task you complete during an incident.
 (`is_note_required: true`). The effect is that a completed workbook *is* the incident record:
 there is no separate report to write afterwards from memory, and no task can be ticked
 without stating what was actually done. It is the single highest value setting in the whole
-template.
+template. 
 
 **Evidence is attached, not transcribed.** Where a task's conclusion comes from a query or a
 command, it is run as a SOAR action against the case so the raw result is attached, and the
