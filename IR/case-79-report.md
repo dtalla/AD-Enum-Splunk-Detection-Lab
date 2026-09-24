@@ -22,7 +22,7 @@ one host. The exfiltration destination was identified and blocked before contain
 lifted, artifacts were hashed and quarantined, and restoration was verified end to end.
 
 **Neither account held elevated privileges at any point.** Everything in the Discovery stage
-was available to any authenticated user, by design of Active Directory.
+was available to any authenticated user, by design of Active Directory. 
 
 ## 2. Timeline (UTC)
 
