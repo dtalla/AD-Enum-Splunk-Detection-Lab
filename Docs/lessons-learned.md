@@ -41,7 +41,7 @@ lost) and two Event **4625**s, one per failed action, confirmed it.
 a **local** break glass account on managed hosts, validated by the host's own SAM.
 
 The tempting alternative, permanently allowing outbound to the DC, is wrong *for this threat
-model*, because LDAP enumeration of that DC is the incident. Containment that restores the
+model*, because LDAP enumeration of that DC is the incident. Containment that restores the 
 attacker's primary objective is not containment.
 
 ## 3. Keep telemetry alive through containment, deliberately
