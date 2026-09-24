@@ -18,7 +18,7 @@ into `C:\AD_Reports_<datetime>\` and zips it. Roughly 30 minutes later the attac
 
 **The interesting part is not the technique. It is the disposability of the tooling.** The
 script is generated per intrusion, so its hash, its filenames and its cmdlet choices are
-worthless as indicators. The behaviour underneath is unchanged and unavoidable.
+worthless as indicators. The behaviour underneath is unchanged and unavoidable. 
 
 That is the thesis this repo is built to test: *detect the behaviour, not the tool.*
 
