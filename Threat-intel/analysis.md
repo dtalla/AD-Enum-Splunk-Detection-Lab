@@ -16,7 +16,7 @@ per object class plus an `AD_Report.html` into `C:\AD_Reports_<datetime>\`, then
 directory.
 
 `Untitled1.ps1` performs **enumeration only**. There is no exfiltration in the script itself.
-Roughly 30 minutes later the attacker dropped two further binaries:
+Roughly 30 minutes later the attacker dropped two further binaries: 
 
 | Binary | Purpose |
 |---|---|
